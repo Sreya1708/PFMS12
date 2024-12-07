@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMI Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>EMI Calculator</h1>
+    <form id="emiForm" method="post">
+        {% csrf_token %}
+        <label for="principal">Loan Amount (₹):</label>
+        <input type="number" id="principal" name="principal" placeholder="Enter loan amount" required>
+
+        <label for="rate">Annual Interest Rate (%):</label>
+        <input type="number" id="rate" name="rate" step="0.01" placeholder="Enter annual interest rate" required>
+
+        <label for="tenure">Loan Tenure (Months):</label>
+        <input type="number" id="tenure" name="tenure" placeholder="Enter loan tenure in months" required>
+
+        <button type="button" onclick="submitEMI()">Calculate EMI</button>
+    </form>
+    <div class="result" id="result"></div>
+
+    <script>
+        function submitEMI() {
+            const form = document.getElementById('emiForm');
+            const formData = new FormData(form);
+
+            fetch('', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                },
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.emi) {
+                    document.getElementById('result').innerText = `Your EMI is ₹${data.emi}.`;
+                } else if (data.error) {
+                    document.getElementById('result').innerText = "Error: " + data.error;
+                }
+            })
+            .catch(error => {
+                document.getElementById('result').innerText = "An error occurred. Please try again.";
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

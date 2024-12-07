@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Alerts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #BC8F8F;
+        }
+
+        .navbar {
+            background-color: #ffde59;
+            color: black;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar .logo img {
+            height: 40px;
+        }
+
+        .navbar .username {
+            font-size: 18px;
+            margin-right: 20px;
+        }
+
+        .alert-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            margin: 50px auto;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .alert-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffde59;
+        }
+
+        .alert-container form label {
+            margin-bottom: 8px;
+            color: black;
+        }
+
+        .alert-container form input {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid black;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .alert-container form input:focus {
+            outline: none;
+            border-color: #ffde59;
+        }
+
+        .alert-container form button {
+            background-color: #ffde59;
+            color: black;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .alert-container form button:hover {
+            background-color: #ffde59;
+        }
+
+        .alert-message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+            color: red;
+        }
+    </style>
+    <script>
+        function updateAlertMessage() {
+            const budget = document.getElementById('monthlyBudget').value;
+            const threshold = document.getElementById('alertThreshold').value;
+            const alertMessage = document.getElementById('alertMessage');
+            if (budget && threshold) {
+                alertMessage.textContent = `You will be alerted when you spend ${threshold} higher than your $${budget} monthly budget.`;
+            } else {
+                alertMessage.textContent = '';
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <img src="{% static 'images/18.jpg' %}" alt="Logo">
+        </div>
+        <div class="username">{{ request.user.username }}</div>
+    </div>
+
+    <!-- Budget Alert Form -->
+    <div class="alert-container">
+        <h2>Set Budget Alerts</h2>
+        <form method="post" id="budgetForm">
+            {% csrf_token %}
+            <label for="monthlyBudget">Monthly budget:</label>
+            <input type="number" id="monthlyBudget" name="monthly_budget" placeholder="Enter your monthly budget" oninput="updateAlertMessage()">
+            <label for="alertThreshold">Alert threshold:</label>
+            <input type="number" id="alertThreshold" name="alert_threshold" placeholder="Enter alert threshold " oninput="updateAlertMessage()">
+            <button type="submit">Save Alert</button>
+        </form>
+    </div>
+
+    <!-- Alert Message -->
+    <div class="alert-message" id="alertMessage"></div>
+
+</body>
+</html>

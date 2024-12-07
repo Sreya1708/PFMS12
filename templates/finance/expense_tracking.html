@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffB631;
+        }
+
+        /* Navbar styling */
+        .navbar {
+            background-color: #ffde59;
+            color: black;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar .logo img {
+            height: 40px;
+        }
+
+        .navbar .username {
+            font-size: 18px;
+            margin-right: 20px;
+        }
+
+        /* Container for the expense tracking form */
+        .expense-container {
+            background-color: #EEE8AA;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            margin: 50px auto;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .expense-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: black;
+        }
+
+        .expense-container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .expense-container form label {
+            margin-bottom: 8px;
+            color: black;
+        }
+
+        .expense-container form input,
+        .expense-container form select {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid black;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .expense-container form input:focus,
+        .expense-container form select:focus {
+            outline: none;
+            border-color: #ffde59;
+        }
+
+        .expense-container form button {
+            background-color: #ffde59;
+            color: black;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .expense-container form button:hover {
+            background-color: #ffde59;
+        }
+
+        .expense-list {
+            margin-top: 40px;
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .expense-list table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .expense-list table th,
+        .expense-list table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid white;
+        }
+
+        .expense-list table th {
+            background-color: #ffde59;
+            color: black;
+        }
+
+        .expense-list table td {
+            color: #228B22;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+             <img src="{% static 'images/18.jpg' %}" alt="Logo">
+        </div>
+        <div class="username">{{ request.user.username }}</div>
+    </div>
+
+    <!-- Expense Form -->
+    <div class="expense-container">
+        <h2>Track Your Expenses</h2>
+        <form method="post" id="expenseForm">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Add Expense</button>
+        </form>
+    </div>
+
+    <!-- Expense List -->
+    <div class="expense-list">
+        <h3>Expense History</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Expense Name</th>
+                    <th>Category</th>
+                    <th>Amount ($)</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                <tr>
+                    <td>{{ expense.name }}</td>
+                    <td>{{ expense.category }}</td>
+                    <td>{{ expense.amount }}</td>
+                    <td>{{ expense.date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

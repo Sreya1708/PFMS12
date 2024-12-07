@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spending Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffe4e1;
+        }
+
+        /* Navbar styling */
+        .navbar {
+            background-color: #ffde59;
+            color: black;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar .logo img {
+            height: 40px;
+        }
+
+        .navbar .username {
+            font-size: 18px;
+            margin-right: 20px;
+        }
+
+        /* Spending Analysis Container */
+        .analysis-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 800px;
+            margin: 50px auto;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .analysis-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .analysis-table {
+            margin-top: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #ffde59;
+            color: black;
+        }
+
+        td {
+            color: #2c3e50;
+        }
+
+        .chart-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <img src="{% static 'images/18.jpg' %}" alt="Logo">
+         </div>
+        <div class="username">{{ request.user.username }}</div>
+    </div>
+
+    <!-- Spending Analysis -->
+    <div class="analysis-container">
+        <h2>Spending Analysis</h2>
+
+        <!-- Spending Form -->
+        <form method="post" class="analysis-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Add Spending</button>
+        </form>
+
+        <!-- Spending Table -->
+        <div class="analysis-table">
+            <h3>Spending Breakdown</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Amount ($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for spending in spendings %}
+                    <tr>
+                        <td>{{ spending.category }}</td>
+                        <td>{{ spending.amount }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Spending Chart -->
+        <div class="chart-container">
+            <h3>Spending Chart</h3>
+            <canvas id="spendingChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Chart.js Script -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Extract data for the chart
+        const labels = [
+            {% for spending in spendings %}
+                '{{ spending.category }}',
+            {% endfor %}
+        ];
+        const data = [
+            {% for spending in spendings %}
+                {{ spending.amount }},
+            {% endfor %}
+        ];
+
+        // Data for the chart
+        const spendingData = {
+            labels: labels,
+            datasets: [{
+                label: 'Spending Analysis ($)',
+                data: data,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Configuration for the chart
+        const config = {
+            type: 'bar',
+            data: spendingData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
+        // Render the chart
+        const spendingChart = new Chart(
+            document.getElementById('spendingChart'),
+            config
+        );
+    </script>
+
+</body>
+</html>

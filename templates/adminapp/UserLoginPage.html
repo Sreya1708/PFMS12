@@ -1,0 +1,66 @@
+{% extends 'Navbar/Projectnavbar.html' %}
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        body,
+        html {
+            height: 100%;
+        }
+
+        .container {
+            min-height: 100vh;
+            padding: 20px;
+            /* Add padding to avoid touching the container edges */
+        }
+    </style>
+</head>
+
+<body>
+
+    {% block body %}
+    <div class="container d-flex justify-content-center align-items-center">
+        <form method="POST" action="{% url 'UserLoginLogic' %}" class="w-100" style="max-width: 400px;">
+            {% csrf_token %}
+
+            {% if messages %}
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <div data-mdb-input-init class="form-outline mb-4">
+                <label class="form-label" for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" required />
+            </div>
+
+
+
+
+
+
+
+            <div data-mdb-input-init class="form-outline mb-4">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required />
+            </div>
+
+
+
+
+
+            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Submit</button>
+
+
+        </form>
+    </div>
+    {% endblock %}
+
+</body>
+
+</html>

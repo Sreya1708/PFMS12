@@ -1,0 +1,49 @@
+{% extends 'Navbar/userNavbar.html' %}
+{% load static %}
+<html>
+<head>
+    <title>REMAINDERS</title>
+</head>
+<body>
+{% block body %}
+
+<div class="container text-center">
+  <div class="row">
+    <div class="col">
+
+        <br><br>
+            <h1>Add Your Bills</h1>
+            <form method="post" action="{% url 'finance:add_task' %}">{% csrf_token %}
+            {{ form.as_p }}
+            <br><br>
+            <div class="d-grid gap-2 col-6 mx-auto">
+            <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+      <br><br><br><br><br><br><br><br><br><br><br>
+       <div class="col-auto d-flex align-items-center">
+      <div style="border-left: 2px solid black; height: 100%;"></div>
+    </div>
+    <div class="col">
+        <br><br>
+
+        <strong> </strong>
+              <h2>Bills to be cleared</h2>
+    <ul>
+        {% for task in tasks %}
+            <li>
+                {{ task.title }}
+                <a href="{% url 'finance:delete_task' task.pk %}">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+</body>
+</html>

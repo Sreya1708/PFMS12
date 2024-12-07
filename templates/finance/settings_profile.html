@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings Profile - Personal Finance Management</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* Navigation Bar Styles */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffde59; /* Yellow background */
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo img {
+            height: 40px; /* Adjust as needed */
+        }
+
+        .username {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Main Section Styles */
+        .settings-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #ffde59;
+            text-align: center;
+        }
+
+        .module {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .module h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .setting-option {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .setting-option label {
+            font-size: 18px;
+            color: #555;
+        }
+
+        .setting-option input,
+        .setting-option select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 60%; /* Adjust width as needed */
+        }
+
+        .save-button {
+            background-color: #ffde59;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: block;
+            margin: 20px auto 0;
+        }
+
+        .save-button:hover {
+            background-color: #fcd863; /* Slightly darker shade */
+        }
+
+        .messages {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .messages .message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .messages .message.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .messages .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav>
+    <div class="logo">
+          <img src="{% static 'images/18.jpg' %}" alt="Logo">
+    </div>
+    <div class="username">{{ request.user.username }}</div>
+</nav>
+
+<!-- Main Settings Section -->
+<div class="settings-container">
+    <h2>Settings</h2>
+
+    <!-- Messages -->
+    <div class="messages">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Update Profile Module -->
+    <div class="module">
+        <h3>Update Profile</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ profile_form.as_p }}
+            <button type="submit" class="save-button">Update Profile</button>
+        </form>
+    </div>
+
+    <!-- Change Password Module -->
+    <div class="module">
+        <h3>Change Password</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ password_form.as_p }}
+            <button type="submit" class="save-button">Change Password</button>
+        </form>
+    </div>
+
+    <!-- Additional Settings Module -->
+    <div class="module">
+        <h3>Additional Settings</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ profile_form.monthly_budget }}
+            {{ profile_form.preferred_currency }}
+            <button type="submit" class="save-button">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
